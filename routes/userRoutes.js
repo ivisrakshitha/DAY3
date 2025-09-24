@@ -1,13 +1,26 @@
 const express = require("express");
-const User = require("../models/User");
+const {
+  getUsers,
+  getUserById,
+  createUser,
+  replaceUser,
+  patchUser,
+  deleteUser,
+  getUserStats,
+} = require("../controllers/userController");
+
 const router = express.Router();
-const { createUser, getUsers } = require("../controllers/userController");
 
-//POST method
-router.route("/").post(createUser);
+// Put stats BEFORE :id so "stats" isn't treated as an id
+router.get("/stats", getUserStats);
 
-//GET method
+router.route("/").get(getUsers).post(createUser);
 
-router.route("/").get(getUsers);
+router
+  .route("/:id")
+  .get(getUserById)
+  .put(replaceUser)
+  .patch(patchUser)
+  .delete(deleteUser);
 
 module.exports = router;
